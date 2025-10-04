@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flipkart-style Frontend</title>
+
+  <!-- Bootstrap CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --fk-blue: #2874f0;
+      --fk-bg: #f1f3f6;
+      --card-radius: 14px;
+    }
+
+    body { background: var(--fk-bg); }
+
+    /* Top Navbar */
+    .fk-navbar { background: var(--fk-blue); }
+    .fk-navbar .nav-link,
+    .fk-navbar .navbar-brand,
+    .fk-navbar .btn,
+    .fk-navbar .dropdown-toggle { color: #fff !important; }
+    .fk-search { min-width: 320px; }
+    .fk-search .form-control { border: none; }
+
+    /* Category rail */
+    .cat-rail { background: #fff; border-bottom: 1px solid #e5e7eb; }
+    .cat-rail .cat { min-width: 90px; }
+    .cat img { width: 44px; height: 44px; object-fit: contain; }
+    .cat p { margin: 6px 0 0; font-size: .9rem; }
+
+    /* Hero carousel */
+    .hero .carousel-item { height: 320px; }
+    .hero .carousel-item img { object-fit: cover; height: 100%; width: 100%; border-radius: 12px; }
+
+    /* Section wrappers */
+    .section { background: #fff; border-radius: 16px; padding: 16px; }
+
+    /* Horizontal product scroller */
+    .product-row { display: grid; grid-auto-flow: column; grid-auto-columns: 220px; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+    .product-row::-webkit-scrollbar { height: 8px; }
+    .product-row::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+    .p-card { scroll-snap-align: start; border-radius: var(--card-radius); overflow: hidden; border: 1px solid #eef2f7; transition: transform .15s ease; }
+    .p-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.06); }
+    .p-card img { width: 100%; height: 160px; object-fit: cover; background: #f8fafc; }
+    .price { color: #108934; font-weight: 600; }
+    .strike { color: #6b7280; text-decoration: line-through; font-size: .9rem; }
+
+    /* Grid blocks */
+    .product-grid .card { border-radius: var(--card-radius); border: 1px solid #eef2f7; overflow: hidden; }
+    .badge-deal { background: #108934; }
+
+    /* Footer */
+    footer { background: #172337; color: #d1d5db; }
+    footer a { color: #d1d5db; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* Small helpers */
+    .brand-chip { background: #fff; border-radius: 999px; border: 1px solid #e5e7eb; padding: 6px 12px; }
+  </style>
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg fk-navbar sticky-top shadow-sm">
+    <div class="container-xxl">
+      <a class="navbar-brand fw-semibold" href="#">Flipkart</a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#topNav" aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="topNav">
+        <form class="d-flex ms-lg-3 my-3 my-lg-0 w-100 fk-search" role="search">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-0"><i class="bi bi-search"></i></span>
+            <input type="search" class="form-control" placeholder="Search for Products, Brands and More" aria-label="Search" />
+          </div>
+        </form>
+
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle me-1"></i> Login
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">My Profile</a></li>
+              <li><a class="dropdown-item" href="#">Orders</a></li>
+              <li><a class="dropdown-item" href="#">Wishlist</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Sign Up</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-cart3 me-1"></i> Cart</a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-shop-window me-1"></i> Become a Seller</a></li>
+          <li class="nav-item d-none d-lg-block"><span class="brand-chip">Explore <strong>Plus</strong> <i class="bi bi-plus-circle"></i></span></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CATEGORY RAIL -->
+  <div class="cat-rail py-3">
+    <div class="container-xxl">
+      <div class="d-flex gap-4 flex-nowrap justify-content-between">
+        <!-- Repeatable Category Item -->
+        <a class="text-center text-decoration-none text-dark cat" href="#">
+          <img src="https://img.icons8.com/color/96/smartphone--v1.png" alt="Mobiles"/>
+          <p>Mobiles</p>
+        </a>
+        <a class="text-center text-decoration-none text-dark cat" href="#">
+          <img src="https://img.icons8.com/color/96/t-shirt.png" alt="Fashion"/>
+          <p>Fashion</p>
+        </a>
+        <a class="text-center text-decoration-none text-dark cat" href="#">
+          <img src="https://img.icons8.com/color/96/headphones.png" alt="Electronics"/>
+          <p>Electronics</p>
+        </a>
+        <a class="text-center text-decoration-none text-dark cat" href="#">
+          <img src="https://img.icons8.com/color/96/sofa.png" alt="Home"/>
+          <p>Home & Furniture</p>
+        </a>
+        <a class="text-center text-decoration-none text-dark cat" href="#">
+          <img src="https://img.icons8.com/color/96/airplane-take-off.png" alt="Travel"/>
+          <p>Flight Bookings</p>
+        </a>
+        <a class="text-center text-decoration-none text-dark cat" href="#">
+          <img src="https://img.icons8.com/color/96/teddy-bear.png" alt="Toys"/>
+          <p>Beauty, Toys & More</p>
+        </a>
+        <a class="text-center text-decoration-none text-dark cat" href="#">
+          <img src="https://img.icons8.com/color/96/grocery-bag.png" alt="Grocery"/>
+          <p>Grocery</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO & BANNERS -->
+  <section class="py-3">
+    <div class="container-xxl">
+      <div id="heroCarousel" class="carousel slide hero" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="https://images.unsplash.com/photo-1526178611783-5bdc6de8d3e3?q=80&w=1600&auto=format&fit=crop" class="d-block w-100" alt="Sale 1">
+          </div>
+          <div class="carousel-item">
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1600&auto=format&fit=crop" class="d-block w-100" alt="Sale 2">
+          </div>
+          <div class="carousel-item">
+            <img src="https://images.unsplash.com/photo-1549237513-6f9f2a1f0b5e?q=80&w=1600&auto=format&fit=crop" class="d-block w-100" alt="Sale 3">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span></button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span></button>
+      </div>
+
+      <!-- Promo strip -->
+      <div class="mt-3 section d-flex align-items-center justify-content-between flex-wrap">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-percent"></i>
+          <span class="fw-semibold">Bank Offers:</span>
+          <span>10% Instant Discount with ICICI/Axis Cards</span>
+        </div>
+        <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOP DEALS (Horizontal) -->
+  <section class="py-3">
+    <div class="container-xxl section">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0">Top Deals</h5>
+        <a href="#" class="text-decoration-none">View All <i class="bi bi-chevron-right"></i></a>
+      </div>
+      <div class="product-row">
+        <!-- Product Card -->
+        <div class="card p-card">
+          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1200&auto=format&fit=crop" alt="Phone"/>
+          <div class="card-body">
+            <h6 class="card-title">Smartphone X12 (128 GB)</h6>
+            <div><span class="price">₹12,999</span> <span class="ms-2 strike">₹18,999</span></div>
+            <p class="small text-muted mb-0">Free delivery • Bank offer</p>
+          </div>
+        </div>
+        <div class="card p-card">
+          <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1200&auto=format&fit=crop" alt="Laptop"/>
+          <div class="card-body">
+            <h6 class="card-title">Ultrabook 14" i5, 16GB</h6>
+            <div><span class="price">₹49,990</span> <span class="ms-2 strike">₹62,990</span></div>
+            <p class="small text-muted mb-0">Exchange available</p>
+          </div>
+        </div>
+        <div class="card p-card">
+          <img src="https://images.unsplash.com/photo-1512446816042-444d641267ee?q=80&w=1200&auto=format&fit=crop" alt="Headphones"/>
+          <div class="card-body">
+            <h6 class="card-title">Noise-cancel Headphones</h6>
+            <div><span class="price">₹2,499</span> <span class="ms-2 strike">₹4,999</span></div>
+            <p class="small text-muted mb-0">Best seller</p>
+          </div>
+        </div>
+        <div class="card p-card">
+          <img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200&auto=format&fit=crop" alt="TV"/>
+          <div class="card-body">
+            <h6 class="card-title">43" 4K Smart TV</h6>
+            <div><span class="price">₹21,990</span> <span class="ms-2 strike">₹34,990</span></div>
+            <p class="small text-muted mb-0">No-cost EMI</p>
+          </div>
+        </div>
+        <div class="card p-card">
+          <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1200&auto=format&fit=crop" alt="Shoes"/>
+          <div class="card-body">
+            <h6 class="card-title">Running Shoes</h6>
+            <div><span class="price">₹1,299</span> <span class="ms-2 strike">₹2,999</span></div>
+            <p class="small text-muted mb-0">Trending now</p>
+          </div>
+        </div>
+        <div class="card p-card">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop" alt="Sneakers"/>
+          <div class="card-body">
+            <h6 class="card-title">Men's Sneakers</h6>
+            <div><span class="price">₹1,899</span> <span class="ms-2 strike">₹3,499</span></div>
+            <p class="small text-muted mb-0">Limited time deal</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEST OF ELECTRONICS (Grid) -->
+  <section class="py-3">
+    <div class="container-xxl section">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Best of Electronics</h5>
+        <a href="#" class="text-decoration-none">View All <i class="bi bi-chevron-right"></i></a>
+      </div>
+      <div class="row g-3 product-grid row-cols-2 row-cols-md-3 row-cols-lg-5">
+        <!-- Card item template -->
+        <div class="col">
+          <div class="card h-100">
+            <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1200&auto=format&fit=crop" class="card-img-top" alt="Camera">
+            <div class="card-body">
+              <h6 class="card-title">Mirrorless Camera</h6>
+              <span class="badge badge-deal">22% off</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100">
+            <img src="https://images.unsplash.com/photo-1527430253228-e93688616381?q=80&w=1200&auto=format&fit=crop" class="card-img-top" alt="Smartwatch">
+            <div class="card-body">
+              <h6 class="card-title">Smartwatch</h6>
+              <span class="badge badge-deal">Up to 40% off</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100">
+            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop" class="card-img-top" alt="Speaker">
+            <div class="card-body">
+              <h6 class="card-title">Bluetooth Speaker</h6>
+              <span class="badge badge-deal">From ₹999</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100">
+            <img src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35ef?q=80&w=1200&auto=format&fit=crop" class="card-img-top" alt="Keyboard">
+            <div class="card-body">
+              <h6 class="card-title">Mechanical Keyboard</h6>
+              <span class="badge badge-deal">Bank offers</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100">
+            <img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=1200&auto=format&fit=crop" class="card-img-top" alt="Drone">
+            <div class="card-body">
+              <h6 class="card-title">Mini Drone</h6>
+              <span class="badge badge-deal">New arrival</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOME ESSENTIALS BANNER + GRID -->
+  <section class="py-3">
+    <div class="container-xxl">
+      <div class="row g-3">
+        <div class="col-lg-8">
+          <div class="section">
+            <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600&auto=format&fit=crop" class="rounded w-100" alt="Home banner" />
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="section h-100">
+            <h5>Banking & Rewards</h5>
+            <ul class="list-unstyled small mb-0 mt-2">
+              <li class="mb-2"><i class="bi bi-credit-card me-2"></i>10% off with ICICI Bank Cards</li>
+              <li class="mb-2"><i class="bi bi-cash-coin me-2"></i>No Cost EMI on select items</li>
+              <li class="mb-2"><i class="bi bi-gift me-2"></i>Coupons on first order</li>
+              <li><i class="bi bi-truck me-2"></i>Free Delivery on Flipkart Plus</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FASHION PICKS (Horizontal) -->
+  <section class="py-3">
+    <div class="container-xxl section">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0">Fashion Picks For You</h5>
+        <a href="#" class="text-decoration-none">View All <i class="bi bi-chevron-right"></i></a>
+      </div>
+      <div class="product-row">
+        <div class="card p-card">
+          <img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200&auto=format&fit=crop" alt="T-shirt"/>
+          <div class="card-body">
+            <h6 class="card-title">Casual T‑Shirt</h6>
+            <div><span class="price">₹399</span> <span class="ms-2 strike">₹799</span></div>
+          </div>
+        </div>
+        <div class="card p-card">
+          <img src="https://images.unsplash.com/photo-1520974735194-4f40228b098f?q=80&w=1200&auto=format&fit=crop" alt="Jeans"/>
+          <div class="card-body">
+            <h6 class="card-title">Slim Fit Jeans</h6>
+            <div><span class="price">₹1,199</span> <span class="ms-2 strike">₹2,499</span></div>
+          </div>
+        </div>
+        <div class="card p-card">
+          <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1200&auto=format&fit=crop" alt="Shoes"/>
+          <div class="card-body">
+            <h6 class="card-title">Running Shoes</h6>
+            <div><span class="price">₹1,499</span> <span class="ms-2 strike">₹3,199</span></div>
+          </div>
+        </div>
+        <div class="card p-card">
+          <img src="https://images.unsplash.com/photo-1503342217505-b0a15cf70489?q=80&w=1200&auto=format&fit=crop" alt="Watch"/>
+          <div class="card-body">
+            <h6 class="card-title">Analog Watch</h6>
+            <div><span class="price">₹899</span> <span class="ms-2 strike">₹1,999</span></div>
+          </div>
+        </div>
+        <div class="card p-card">
+          <img src="https://images.unsplash.com/photo-1585386959984-a4155223168f?q=80&w=1200&auto=format&fit=crop" alt="Backpack"/>
+          <div class="card-body">
+            <h6 class="card-title">Travel Backpack</h6>
+            <div><span class="price">₹999</span> <span class="ms-2 strike">₹1,999</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="mt-4 pt-5 pb-4">
+    <div class="container-xxl">
+      <div class="row g-4">
+        <div class="col-6 col-md-3">
+          <h6 class="text-uppercase text-white-50">About</h6>
+          <ul class="list-unstyled small mt-3">
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-3">
+          <h6 class="text-uppercase text-white-50">Help</h6>
+          <ul class="list-unstyled small mt-3">
+            <li><a href="#">Payments</a></li>
+            <li><a href="#">Shipping</a></li>
+            <li><a href="#">Cancellation & Returns</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-3">
+          <h6 class="text-uppercase text-white-50">Policy</h6>
+          <ul class="list-unstyled small mt-3">
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Terms Of Use</a></li>
+            <li><a href="#">Security</a></li>
+            <li><a href="#">Privacy</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-3">
+          <h6 class="text-uppercase text-white-50">Mail Us</h6>
+          <address class="small mt-3">Flipkart Internet Pvt Ltd,<br/> Buildings Alyssa, Begonia &
+            Clove Embassy Tech Village,<br/> Outer Ring Road, Devarabeesanahalli Village,<br/> Bengaluru, 560103, India</address>
+        </div>
+      </div>
+      <hr class="border-secondary my-4"/>
+      <div class="d-flex flex-wrap justify-content-between align-items-center small">
+        <div class="d-flex align-items-center gap-3 mb-2">
+          <span><i class="bi bi-shield-check me-1"></i>Secure Payments</span>
+          <span><i class="bi bi-truck me-1"></i>Fast Delivery</span>
+          <span><i class="bi bi-arrow-repeat me-1"></i>Easy Returns</span>
+        </div>
+        <div class="text-white-50">© 2025 Flipkart‑style demo. For learning use only.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Optional: improve keyboard scrolling on horizontal product rows
+    document.querySelectorAll('.product-row').forEach(row => {
+      row.addEventListener('wheel', (evt) => {
+        if (Math.abs(evt.deltaY) > Math.abs(evt.deltaX)) {
+          row.scrollLeft += evt.deltaY;
+          evt.preventDefault();
+        }
+      }, { passive: false });
+    });
+  </script>
+</body>
+</html>

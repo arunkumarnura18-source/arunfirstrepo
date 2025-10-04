@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+    <title>css style</title>
+    <style>
+        body{
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            height: 100vh;
+            
+            
+            
+        }
+       
+        #div1{
+            width: 600px;
+            height: 500px;
+            border: 1px solid black;
+        }
+        #div1:hover{
+            background-color: orangered;
+            color: white;
+            
+         
+        }
+        #div2{
+           font-size: 150px;
+           position: relative;
+           left: 60px;
+           top: 70px;
+           
+
+           animation: logo infinite 2s;
+        }
+        @keyframes logo{
+            0%{
+                transform: rotate(360deg);
+           
+        }
+    }
+        #div3{
+            margin-left: 40px;
+            margin-top: 0px;
+        }
+        #div4{
+            margin-left: 20px;
+            
+        }
+        #div5{
+            font-size: 100px;
+            font-weight: 600;
+            margin-left: 450px;
+            position: relative;
+            bottom: 100px;
+            opacity: 0.5;
+            
+        }
+    </style>
+</head>
+<body>
+   
+    <div id="div1">
+     <div id="div2"><i class="fa-brands fa-windows"></i></div>
+     <div id="div5">01</div>
+     <div id="div3"><h1>Big Data Solutions</h1></div>
+     <div id="div4"><h3>Our team next-generation architects help clients make sense of the vast tracts of data within the organization by devising new monetization strategies.</h3></div>
+    </div>
+</body>
+</html>
